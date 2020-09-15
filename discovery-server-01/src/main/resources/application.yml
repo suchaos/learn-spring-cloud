@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: discovery-server  # 应用名
+
+server:
+  port: 8761 # 端口
+
+# standalone 时这样配
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+  server:
+    # 1. 禁用自保护模式
+    enable-self-preservation: false
+    # 2. 禁用一级缓存，开发时可以这样配置
+    use-read-only-response-cache: false
+    # 2. 在不禁用一级缓存的情况下，减少二级缓存与以及缓存的同步时间，从 30s 改为 3s
+    #response-cache-update-interval-ms: 3000
+    # 3. 定时检查心跳服务，用于剔除过期的实例，从 60s 改为 6s
+    eviction-interval-timer-in-ms: 6000

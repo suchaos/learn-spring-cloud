@@ -1,0 +1,31 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: hystrix-turbine
+
+################################### Eureka Start #######################################
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    # 6. 从 注册中心拉取服务列表的时间间隔 -- 从 30s 改为 3s
+    registry-fetch-interval-seconds: 3
+    register-with-eureka: false
+
+#  instance:
+#    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+#    # 5. 发送心跳时间间隔 -- 从 30s 改为 3s
+#    lease-renewal-interval-in-seconds: 3
+#    # 4. 实例过期时间间隔 从 90s 改为 9s 或者 6s
+#    leaseExpirationDurationInSeconds: 6
+################################### Eureka Stop #######################################
+
+turbine:
+  combine-host-port: true
+  app-config: hystrix-feign-01
+  #cluster-name-expression: new String("default")
+  cluster-name-expression: new String("hystrix-feign-service")
+  aggregator:
+    # cluster-config: default
+    cluster-config: hystrix-feign-service

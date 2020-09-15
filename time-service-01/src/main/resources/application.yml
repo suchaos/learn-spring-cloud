@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: time-service  # 应用名
+
+# 为了演示负载均衡，启动多个实例，所以 server.port 用命令行的方式传入
+#server:
+#  port: 9090 # 端口
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}

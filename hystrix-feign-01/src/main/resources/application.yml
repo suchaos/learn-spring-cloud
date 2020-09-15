@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: hystrix-feign-01  # 应用名
+
+server:
+  port: 8081 # 端口
+
+# 和 Hystrix Dashboard 配置使用
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+################################### Eureka Start #######################################
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    # 6. 从 注册中心拉取服务列表的时间间隔 -- 从 30s 改为 3s
+    registry-fetch-interval-seconds: 3
+
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    # 5. 发送心跳时间间隔 -- 从 30s 改为 3s
+    lease-renewal-interval-in-seconds: 3
+    # 4. 实例过期时间间隔 从 90s 改为 9s 或者 6s
+    leaseExpirationDurationInSeconds: 6
+################################### Eureka Stop #######################################
+
+################################### Feign Start #######################################
+feign:
+  httpclient:
+    enabled: true # 使用 apache httpclient
+    max-connections: 1000
+    max-connections-per-route: 200
+  hystrix:
+    enabled: true # feign 使用 Hystrix
+################################### Feign Stop #######################################
+
+################################### Hystrix Start #######################################
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3800
+################################### Hystrix Stop #######################################
+
+################################### Ribbon Start #######################################
+ribbon:
+  eureka:
+    enabled: true
+  eager-load:
+    clients: feign-service-02
+  ConnectTimeout: 250  #毫秒    连接超时时间
+  ReadTimeout: 1000     #毫秒      逻辑处理超时时间
+  OkToRetryOnAllOperations: false
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 1
+  ServerListRefreshInterval: 1000 # 设置 Ribbon 列表的刷新时间
+
+
+## 设置 Ribbon 列表的刷新时间
+#feign-service-02:
+#  ribbon:
+#    ServerListRefreshInterval: 3000
+
+################################### Ribbon Stop #######################################

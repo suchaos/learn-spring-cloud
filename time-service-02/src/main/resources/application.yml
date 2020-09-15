@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: time-service  # 应用名
+
+# 为了演示负载均衡，启动多个实例，所以 server.port 用命令行的方式传入
+#server:
+#  port: 9090 # 端口
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka,http://localhost:8762/eureka
+    # 6. 从 注册中心拉取服务列表的时间间隔 -- 从 30s 改为 3s
+    registry-fetch-interval-seconds: 3
+
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    # 5. 发送心跳时间间隔 -- 从 30s 改为 3s
+    lease-renewal-interval-in-seconds: 3
+    # 4. 实例过期时间间隔 从 90s 改为 9s 或者 6s
+    leaseExpirationDurationInSeconds: 6

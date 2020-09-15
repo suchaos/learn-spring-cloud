@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: discovery-cluster-server  # 应用名
+
+---
+spring:
+  profiles: discovery1
+server:
+  port: 8761 # 端口
+eureka:
+  instance:
+    hostname: discovery1 # 在 hosts 文件中配置过了
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+    # 4. 实例过期时间间隔 从 90s 改为 9s
+    lease-expiration-duration-in-seconds: 9
+    # 5. 发送心跳时间间隔（对于 eureka server 多个实例时需要配置，standalone 时不需要） -- 从 30s 改为 3s
+    lease-renewal-interval-in-seconds: 3
+  client:
+    service-url:
+      defaultZone: http://discovery2:8762/eureka
+  server:
+    # 1. 禁用自保护模式
+    enable-self-preservation: false
+    # 2. 禁用一级缓存，开发时可以这样配置
+    # use-read-only-response-cache: false
+    # 2. 在不禁用一级缓存的情况下，减少二级缓存与以及缓存的同步时间，从 30s 改为 3s
+    response-cache-update-interval-ms: 3000
+    # 3. 定时检查心跳服务，用于剔除过期的实例，从 60s 改为 6s
+    eviction-interval-timer-in-ms: 6000
+
+---
+spring:
+  profiles: discovery2
+server:
+  port: 8762 # 端口
+eureka:
+  instance:
+    hostname: discovery2 # 在 hosts 文件中配置过了
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+    # 4. 实例过期时间间隔 从 90s 改为 9s
+    lease-expiration-duration-in-seconds: 9
+    # 5. 发送心跳时间间隔（对于 eureka server 多个实例时需要配置，standalone 时不需要） -- 从 30s 改为 3s
+    lease-renewal-interval-in-seconds: 3
+  client:
+    service-url:
+      defaultZone: http://discovery1:8761/eureka # 除了自己，其他全部都要写在这里
+  server:
+    # 1. 禁用自保护模式
+    enable-self-preservation: false
+    # 2. 禁用一级缓存，开发时可以这样配置
+    # use-read-only-response-cache: false
+    # 2. 在不禁用一级缓存的情况下，减少二级缓存与以及缓存的同步时间，从 30s 改为 3s
+    response-cache-update-interval-ms: 3000
+    # 3. 定时检查心跳服务，用于剔除过期的实例，从 60s 改为 6s
+    eviction-interval-timer-in-ms: 6000

@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: hello-feign  # 应用名
+
+server:
+  port: 9090 # 端口
