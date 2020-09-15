@@ -69,7 +69,7 @@
 * feign-service-02 作为 feign 的服务端
 * hystrix-dashboard-01 作为 hystrix dashboard 的单独应用
 
-## 实验8 Hystrix 和 turbine 使用
+## 实验9 Hystrix 和 turbine 使用
 组件：
 * discovery-server-01: standalone 启动
 * hystrix-feign-01 作为 feign 的客户端，并启用 Hystrix
